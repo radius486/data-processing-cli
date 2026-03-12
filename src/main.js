@@ -18,14 +18,13 @@ const dataProcessingToolkit = async () => {
     const userInput = await rl.question('> ');
     const [command, value] = userInput.split(' ');
 
-    switch (command) {
-      case 'up':
-        __currentDir = path.join(__currentDir, '../');
-        break;
-      case 'cd':
-        const __newDir = value.startsWith('/') ? value : path.join(__currentDir, value);
-
-        try {
+    try {
+      switch (command) {
+        case 'up':
+          __currentDir = path.join(__currentDir, '../');
+          break;
+        case 'cd':
+          const __newDir = value.startsWith('/') ? value : path.join(__currentDir, value);
           const stats = await fs.stat(__newDir);
           const isDirectory = stats.isDirectory();
 
@@ -34,24 +33,46 @@ const dataProcessingToolkit = async () => {
           }
 
           __currentDir = __newDir;
-        } catch (err) {
-          console.log('Operation failed');
-        }
 
-        break;
-      case 'date':
-        const date = new Date().toISOString();
-        console.log('Current date: ', date);
-        break;
-      case '.exit':
-        console.log('Thank you for using Data Processing CLI!');
-        process.exit(0);
-        break;
-      default:
-        console.log('Invalid input');
-        break;
+          break;
+        case 'ls':
+          const entries = await fs.readdir(__currentDir, { withFileTypes: true });
+          let maxLength = 0;
+
+          entries.sort((a, b) => {
+            maxLength = a.name.length > maxLength ? a.name.length : maxLength;
+
+            const aType = a.isDirectory();
+            const bType = b.isDirectory();
+
+            const typeComparison = bType - aType;
+
+            if (typeComparison !== 0) {
+              return typeComparison;
+            }
+
+            return a.name.localeCompare(b.name);
+          });
+
+          for (const entry of entries) {
+            const spaces = ' '.repeat(maxLength - entry.name.length);
+            console.log(`${entry.name + spaces} [${entry.isDirectory() ? 'folder' : 'file'}]`);
+          }
+
+          break;
+        case '.exit':
+          console.log('Thank you for using Data Processing CLI!');
+          process.exit(0);
+          break;
+        default:
+          console.log('Invalid input');
+          break;
+      }
+    } catch (error) {
+      console.log('Operation failed');
     }
 
+    process.stdout.write('\n');
     return prompt();
   }
 
