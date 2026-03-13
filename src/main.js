@@ -16,12 +16,11 @@ const startREPL = async () => {
     console.log(`You are currently in ${state.currentDir}`);
 
     const userInput = await rl.question('> ');
-    const [command, value] = userInput.trim().split(/\s+/);
+    const [command, ...args] = userInput.trim().split(/\s+/);
 
     try {
-      await handleCommand(command, value, state);
+      await handleCommand(command, args, state);
     } catch (err) {
-      console.error(err);
       console.log('Operation failed');
     }
 

@@ -1,12 +1,14 @@
 import path from 'path';
 import fs from 'node:fs/promises';
+import { pathResolver } from './utils/pathResolver.js';
 
 export async function goUp(currentDir) {
   return path.join(currentDir, '..');
 }
 
-export async function changeDir(currentDir, value) {
-  const newDir = value.startsWith('/') ? value : path.resolve(currentDir, value);
+export async function changeDir(currentDir, args) {
+  const value = args[0];
+  const newDir = pathResolver(currentDir, value);
   const stats = await fs.stat(newDir);
 
   if (!stats.isDirectory()) throw new Error('Not a directory');

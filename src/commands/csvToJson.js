@@ -1,16 +1,20 @@
 import fs from 'node:fs';
 import { Transform, pipeline } from 'node:stream';
+import { pathResolver } from '../utils/pathResolver.js';
+import { getArgValue } from '../utils/getArgValue.js';
 
-export async function csvToJson(inputPath, outputPath) {
-  console.log('CSV: ', inputPath);
-  console.log('JSON: ', outputPath);
+export async function csvToJson(currentDir, args) {
+  const inputPath = getArgValue('--input', args);
+  const outputPath = getArgValue('--output', args);
+  const resolvedInputPath = pathResolver(currentDir, inputPath);
+  const resolvedOutputPath = pathResolver(currentDir, outputPath);
 
   let headers = null;
   let isFirstRow = true;
   let buffer = '';
 
-  const readStream = fs.createReadStream(inputPath);
-  const writeStream = fs.createWriteStream(outputPath);
+  const readStream = fs.createReadStream(resolvedInputPath);
+  const writeStream = fs.createWriteStream(resolvedOutputPath);
 
   const csvTransformer = new Transform({
     transform(chunk, encoding, callback) {
