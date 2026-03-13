@@ -20,7 +20,8 @@ const startREPL = async () => {
 
     try {
       await handleCommand(command, value, state);
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       console.log('Operation failed');
     }
 
