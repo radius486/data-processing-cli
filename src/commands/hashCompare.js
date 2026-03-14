@@ -1,19 +1,20 @@
-// hash --input documents/file.txt --algorithm md5 --save
+// hash-compare --input documents/file.txt --hash documents/file.txt.sha256
+// hash-compare --input documents/file.txt --hash documents/file.txt.md5 --algorithm md5
 import fs from 'node:fs';
-import path from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { pathResolver } from '../utils/pathResolver.js';
 import { getArgValue } from '../utils/getArgValue.js';
 import { createHash } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 
-export async function calculateHash(currentDir, args) {
+export async function compareHash(currentDir, args) {
   try {
     const inputPath = getArgValue('--input', args);
+    const hashPath = getArgValue('--hash', args);
     const algorithm = getArgValue('--algorithm', args) ?? 'sha256';
-    const save = args.includes('--save');
 
     const resolvedInputPath = pathResolver(currentDir, inputPath);
+    const resolvedHashPath = pathResolver(currentDir, hashPath);
     const readStream = fs.createReadStream(resolvedInputPath, { encoding: 'utf8' });
 
     const hash = createHash(algorithm);
@@ -24,16 +25,10 @@ export async function calculateHash(currentDir, args) {
     );
 
     const calculatedHash = hash.digest('hex');
-    const hashString = `${algorithm}: ${calculatedHash}`
-    console.log(hashString);
+    const expectedHashContent = await readFile(resolvedHashPath);
+    const expectedHash = expectedHashContent.toString();
 
-    if (save) {
-      const fileDirectoryArr = resolvedInputPath.split('/');
-      const filename = `${fileDirectoryArr.pop()}.${algorithm}`;
-      const fileDirectoryPath = fileDirectoryArr.join('/');
-
-      await writeFile(path.join(fileDirectoryPath, filename), calculatedHash, 'utf8');
-    }
+    console.log(calculatedHash === expectedHash ? 'OK' : 'MISMATCH');
   } catch (err) {
     throw new Error('Pipeline error');
   }
