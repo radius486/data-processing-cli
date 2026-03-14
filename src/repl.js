@@ -1,5 +1,6 @@
 import { goUp, changeDir, listDir } from './navigation.js';
 import { csvToJson } from './commands/csvToJson.js';
+import { jsonToCsv } from './commands/jsonToCsv.js';
 
 export async function handleCommand(command, args, state) {
   switch (command) {
@@ -14,6 +15,9 @@ export async function handleCommand(command, args, state) {
       break;
     case 'csv-to-json':
       await csvToJson(state.currentDir, args);
+      break;
+    case 'json-to-csv':
+      await jsonToCsv(state.currentDir, args);
       break;
     case '.exit':
       console.log('Thank you for using Data Processing CLI!');

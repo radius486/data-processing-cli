@@ -1,3 +1,4 @@
+// csv-to-json --input documents/data.csv --output documents/data.json
 import fs from 'node:fs';
 import { Transform, pipeline } from 'node:stream';
 import { pathResolver } from '../utils/pathResolver.js';
@@ -57,7 +58,7 @@ export async function csvToJson(currentDir, args) {
 
   pipeline(readStream, csvTransformer, writeStream, (err) => {
     if (err) {
-      throw new Error('Pipeline failed');
+      console.log('Operation failed');
     } else {
       console.log('Conversion has been completed successfully!');
     }
