@@ -2,6 +2,7 @@ import { goUp, changeDir, listDir } from './navigation.js';
 import { csvToJson } from './commands/csvToJson.js';
 import { jsonToCsv } from './commands/jsonToCsv.js';
 import { count } from './commands/count.js';
+import { calculateHash } from './commands/hash.js';
 
 export async function handleCommand(command, args, state) {
   switch (command) {
@@ -22,6 +23,9 @@ export async function handleCommand(command, args, state) {
       break;
     case 'count':
       await count(state.currentDir, args);
+      break;
+    case 'hash':
+      await calculateHash(state.currentDir, args);
       break;
     case '.exit':
       console.log('Thank you for using Data Processing CLI!');
