@@ -1,0 +1,21 @@
+{
+  "name": "data-processing-cli",
+  "version": "1.0.0",
+  "description": "Node JS data processing CLI",
+  "homepage": "https://github.com/radius486/data-processing-cli#readme",
+  "bugs": {
+    "url": "https://github.com/radius486/data-processing-cli/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radius486/data-processing-cli.git"
+  },
+  "license": "MIT",
+  "author": "Rodion Grishaev",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/main.js"
+  }
+}
