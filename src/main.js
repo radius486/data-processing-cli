@@ -5,6 +5,11 @@ import { handleCommand } from './repl.js';
 
 const rl = readline.createInterface({ input, output });
 
+rl.on('SIGINT', () => {
+  console.log('\nThank you for using Data Processing CLI!');
+  process.exit(0);
+});
+
 const state = {
   currentDir: os.homedir()
 };
