@@ -4,6 +4,9 @@ import { jsonToCsv } from './commands/jsonToCsv.js';
 import { count } from './commands/count.js';
 import { calculateHash } from './commands/hash.js';
 import { compareHash } from './commands/hashCompare.js';
+import { encryptData } from './commands/encrypt.js';
+import { decryptData } from './commands/decrypt.js';
+
 
 export async function handleCommand(command, args, state) {
   switch (command) {
@@ -30,6 +33,12 @@ export async function handleCommand(command, args, state) {
       break;
     case 'hash-compare':
       await compareHash(state.currentDir, args);
+      break;
+    case 'encrypt':
+      await encryptData(state.currentDir, args);
+      break;
+    case 'decrypt':
+      await decryptData(state.currentDir, args);
       break;
     case '.exit':
       console.log('Thank you for using Data Processing CLI!');
